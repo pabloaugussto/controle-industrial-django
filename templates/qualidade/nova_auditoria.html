@@ -3,88 +3,116 @@
 {% block content %}
 <div class="max-w-4xl mx-auto">
     
-    <div class="mb-8 flex items-center gap-4">
-        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-            <svg class="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        </div>
-        <div>
-            <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">Nova Auditoria 5S</h2>
-            <p class="text-gray-500">Preencha o checklist com atenção aos detalhes.</p>
-        </div>
+    <div class="mb-8 text-center">
+        <h2 class="text-3xl font-extrabold text-gray-800">Nova Auditoria 5S</h2>
+        <p class="text-gray-500">Preencha o checklist abaixo avaliando cada senso.</p>
     </div>
 
-    <form method="post" enctype="multipart/form-data" class="space-y-8">
+    <form method="POST" enctype="multipart/form-data" class="space-y-8">
         {% csrf_token %}
 
-        <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-            <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Dados Iniciais</h3>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Setor Auditado</label>
-                    {{ form.setor }}
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Observações Gerais</label>
-                    {{ form.observacao }}
-                </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+            <h3 class="font-bold text-gray-700 mb-4 border-b pb-2">Informações Iniciais</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for field in form %}
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">{{ field.label }}</label>
+                        {{ field }} </div>
+                {% endfor %}
             </div>
         </div>
 
-        <div class="space-y-4">
-            {% for questao in questoes %}
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
-                <div class="flex flex-col md:flex-row justify-between gap-6">
+        {% regroup questoes by get_senso_display as lista_sensos %}
+
+        {% for senso in lista_sensos %}
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+            
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-industrial-600 text-white flex items-center justify-center font-bold text-sm">
+                    {{ forloop.counter }}S
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 uppercase tracking-wide">
+                    {{ senso.grouper }}
+                </h3>
+            </div>
+
+            <div class="p-6 space-y-6">
+                {% for questao in senso.list %}
+                <div class="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
                     
-                    <div class="flex-1">
-                        <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-2">
-                            {{ questao.get_senso_display }}
-                        </span>
-                        <p class="text-lg font-medium text-gray-800">{{ questao.texto }}</p>
-                    </div>
-
-                    <div class="flex flex-col items-end gap-3 min-w-[200px]">
+                    <p class="text-gray-800 font-medium text-lg mb-3">{{ questao.texto }}</p>
+                    
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         
-                        <div class="flex bg-gray-100 rounded-lg p-1 w-full">
-                            <label class="flex-1 cursor-pointer">
-                                <input type="radio" name="status_{{ questao.id }}" value="false" class="peer sr-only">
-                                <div class="text-center py-2 rounded-md text-sm font-bold text-gray-500 peer-checked:bg-red-500 peer-checked:text-white transition-all">
-                                    NOK ❌
-                                </div>
-                            </label>
+                        <div class="flex items-center gap-2">
+                            <input type="hidden" name="status_{{ questao.id }}" id="input_status_{{ questao.id }}" value="true">
+                            
+                            <button type="button" 
+                                onclick="setConformidade('{{ questao.id }}', false)"
+                                id="btn_nok_{{ questao.id }}"
+                                class="px-4 py-2 rounded-lg font-bold text-sm border transition-all text-gray-400 border-gray-300 hover:bg-red-50">
+                                NOK ❌
+                            </button>
 
-                            <label class="flex-1 cursor-pointer">
-                                <input type="radio" name="status_{{ questao.id }}" value="true" class="peer sr-only" checked>
-                                <div class="text-center py-2 rounded-md text-sm font-bold text-gray-500 peer-checked:bg-green-500 peer-checked:text-white transition-all">
-                                    OK ✅
-                                </div>
-                            </label>
+                            <button type="button" 
+                                onclick="setConformidade('{{ questao.id }}', true)"
+                                id="btn_ok_{{ questao.id }}"
+                                class="px-4 py-2 rounded-lg font-bold text-sm border transition-all bg-green-500 text-white border-green-500 shadow-md">
+                                OK ✅
+                            </button>
                         </div>
 
-                        <div class="w-full">
-                            <label class="flex items-center gap-2 cursor-pointer text-sm text-blue-600 hover:text-blue-800">
+                        <div class="relative">
+                            <label for="foto_{{ questao.id }}" class="cursor-pointer flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 transition-colors font-medium">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 <span>Adicionar Foto (Opcional)</span>
-                                <input type="file" name="foto_{{ questao.id }}" accept="image/*" class="hidden">
                             </label>
+                            <input type="file" name="foto_{{ questao.id }}" id="foto_{{ questao.id }}" class="hidden" onchange="previewFoto(this, 'preview_{{ questao.id }}')">
+                            <span id="preview_{{ questao.id }}" class="text-xs text-gray-400 ml-2"></span>
                         </div>
 
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% empty %}
-            <div class="text-center py-10 text-gray-500">
-                Nenhuma pergunta cadastrada. Vá ao admin e adicione perguntas ao checklist.
-            </div>
-            {% endfor %}
         </div>
+        {% endfor %}
 
-        <div class="pt-4 pb-12">
-            <button type="submit" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl shadow-xl hover:bg-green-700 transition transform hover:-translate-y-1 text-lg flex justify-center items-center gap-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                FINALIZAR AUDITORIA
+        <div class="flex justify-end pt-4">
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg transform transition hover:-translate-y-1 text-lg flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Finalizar Auditoria
             </button>
         </div>
 
     </form>
 </div>
+
+<script>
+function setConformidade(id, isOk) {
+    const input = document.getElementById(`input_status_${id}`);
+    const btnOk = document.getElementById(`btn_ok_${id}`);
+    const btnNok = document.getElementById(`btn_nok_${id}`);
+
+    // Atualiza o valor escondido que vai pro Python
+    input.value = isOk ? 'true' : 'false';
+
+    // Atualiza visual dos botões
+    if (isOk) {
+        btnOk.className = "px-4 py-2 rounded-lg font-bold text-sm border transition-all bg-green-500 text-white border-green-500 shadow-md";
+        btnNok.className = "px-4 py-2 rounded-lg font-bold text-sm border transition-all text-gray-400 border-gray-300 hover:bg-red-50";
+    } else {
+        btnOk.className = "px-4 py-2 rounded-lg font-bold text-sm border transition-all text-gray-400 border-gray-300 hover:bg-green-50";
+        btnNok.className = "px-4 py-2 rounded-lg font-bold text-sm border transition-all bg-red-500 text-white border-red-500 shadow-md";
+    }
+}
+
+function previewFoto(input, previewId) {
+    const span = document.getElementById(previewId);
+    if (input.files && input.files[0]) {
+        span.innerText = "📸 Foto selecionada: " + input.files[0].name;
+        span.className = "text-xs text-green-600 font-bold ml-2";
+    }
+}
+</script>
 {% endblock %}
