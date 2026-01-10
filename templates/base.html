@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-gray-50">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Sistema Industrial{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Gradiente Industrial Premium (Cobre -> Marrom Escuro) */
+      .industrial-gradient {
+        background: linear-gradient(135deg, #29bdb0 0%, #110803 100%);
+      }
+
+      /* Efeito de vidro sutil no menu */
+      .nav-item:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(5px);
+      }
+
+      /* Estilização de Tabelas Globais */
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+      th {
+        text-align: left;
+        padding: 16px;
+        background-color: #f9fafb;
+        color: #374151;
+        font-weight: 600;
+        border-bottom: 2px solid #e5e7eb;
+      }
+      td {
+        padding: 16px;
+        border-bottom: 1px solid #f3f4f6;
+        color: #4b5563;
+      }
+      tr:hover td {
+        background-color: #fff7ed;
+      } /* Hover laranja bem clarinho */
+    </style>
+  </head>
+
+  <body class="h-full flex flex-col antialiased text-gray-800">
+    <nav class="industrial-gradient shadow-xl z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+          <div class="flex items-center gap-4">
+            <div
+              class="bg-white/10 p-2 rounded-lg backdrop-blur-sm border border-white/20 shadow-inner"
+            >
+              <span class="text-3xl">🏭</span>
+            </div>
+            <div class="flex flex-col">
+              <a
+                href="{% url 'dashboard' %}"
+                class="text-white font-extrabold text-2xl tracking-tight leading-none drop-shadow-md"
+              >
+                ALMOXARIFADO <span class="text-orange-200">2.0</span>
+              </a>
+              <span
+                class="text-orange-100 text-xs font-medium tracking-wider uppercase opacity-80"
+                >Controle Industrial</span
+              >
+            </div>
+          </div>
+
+          {% if user.is_authenticated %}
+          <div class="hidden md:flex items-center space-x-2">
+            <a
+              href="{% url 'dashboard' %}"
+              class="nav-item text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
+            >
+              <svg
+                class="w-5 h-5 opacity-70"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                ></path>
+              </svg>
+              Visão Geral
+            </a>
+
+            <a
+              href="{% url 'estoque:lista_produtos' %}"
+              class="nav-item text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
+            >
+              <svg
+                class="w-5 h-5 opacity-70"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                ></path>
+              </svg>
+              Estoque
+            </a>
+
+            <a
+              href="{% url 'qualidade:relatorios' %}"
+              class="nav-item text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2"
+            >
+              <svg
+                class="w-5 h-5 opacity-70"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                ></path>
+              </svg>
+              Qualidade 5S
+            </a>
+          </div>
+
+          <div class="hidden md:flex items-center gap-4">
+            <div class="text-right hidden lg:block">
+              <p class="text-white text-sm font-bold">{{ user.username }}</p>
+              <p class="text-orange-200 text-xs">Funcionário Ativo</p>
+            </div>
+            <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="bg-black/20 hover:bg-black/40 text-white p-2 rounded-full transition-colors border border-white/10"
+                title="Sair do Sistema"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  ></path>
+                </svg>
+              </button>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      {% if messages %}
+      <div class="mb-8 space-y-2">
+        {% for message in messages %}
+        <div
+          class="p-4 rounded-lg shadow-sm border-l-4 flex items-center justify-between animate-fade-in-down {% if message.tags == 'error' %} bg-red-50 border-red-500 text-red-700 {% elif message.tags == 'success' %} bg-green-50 border-green-500 text-green-700 {% else %} bg-blue-50 border-blue-500 text-blue-700 {% endif %}"
+        >
+          <span class="font-medium flex items-center gap-2">
+            {% if message.tags == 'success' %}✓{% else %}⚠️{% endif %} {{
+            message }}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% block content %} {% endblock %}
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+      <div
+        class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center"
+      >
+        <p class="text-gray-500 text-sm">
+          © 2025 Almoxarifado Industrial. Versão Beta.
+        </p>
+        <div class="flex space-x-4">
+          <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+          <span class="text-xs text-gray-400 font-mono">SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

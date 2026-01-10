@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="space-y-8">
+
+    <div class="flex justify-between items-center">
+        <div>
+            <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">Indicadores de Qualidade</h2>
+            <p class="text-gray-500">Acompanhamento semanal do programa 5S</p>
+        </div>
+        <a href="{% url 'qualidade:nova_auditoria' %}" class="industrial-gradient text-white px-6 py-3 rounded-lg font-bold shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Nova Auditoria
+        </a>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+        
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 relative overflow-hidden">
+            <p class="text-sm font-bold text-gray-400 uppercase">Média da Semana</p>
+            <div class="flex items-baseline gap-2 mt-2">
+                <span class="text-4xl font-extrabold {% if media_semanal >= 80 %}text-green-600{% elif media_semanal >= 50 %}text-yellow-500{% else %}text-red-500{% endif %}">
+                    {{ media_semanal|floatformat:1 }}%
+                </span>
+                <span class="text-sm text-gray-500">de conformidade</span>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+            <p class="text-sm font-bold text-gray-400 uppercase">Setor Destaque 🏆</p>
+            <div class="mt-2">
+                <span class="text-2xl font-bold text-gray-800">{{ melhor_setor.nome }}</span>
+                <p class="text-sm text-green-600 font-bold">{{ melhor_setor.media|floatformat:1 }}% de média</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+            <p class="text-sm font-bold text-gray-400 uppercase">Atenção Necessária ⚠️</p>
+            <div class="mt-2">
+                {% with pior=ranking|last %}
+                    <span class="text-2xl font-bold text-gray-800">{{ pior.nome }}</span>
+                    <p class="text-sm text-red-500 font-bold">{{ pior.media|floatformat:1 }}% de média</p>
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8">
+        
+        <div class="col-span-2 bg-white p-6 rounded-xl shadow-md border border-gray-100">
+            <h3 class="font-bold text-gray-800 mb-6">Evolução Diária (Semana Atual)</h3>
+            <div class="relative h-72 w-full">
+                <canvas id="graficoSemanal"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+            <h3 class="font-bold text-gray-800 mb-4">Ranking Geral</h3>
+            <div class="space-y-5">
+                {% for item in ranking %}
+                <div>
+                    <div class="flex justify-between items-center text-sm mb-1 gap-2">
+                        <span class="font-medium text-gray-700 truncate">{{ item.nome }}</span>
+                        <span class="font-bold text-gray-900 whitespace-nowrap">{{ item.media|floatformat:0 }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="h-2.5 rounded-full {% if item.media >= 80 %}bg-green-500{% elif item.media >= 50 %}bg-yellow-400{% else %}bg-red-500{% endif %}" 
+                             style="width: {{ item.media|stringformat:'f' }}%"></div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-sm text-gray-400">Nenhuma auditoria realizada.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const ctx = document.getElementById('graficoSemanal').getContext('2d');
+    // Verifica se os dados existem antes de tentar parsear
+    const labelsRaw = '{{ chart_labels|safe }}';
+    const dataRaw = '{{ chart_data|safe }}';
+    
+    const labels = labelsRaw ? JSON.parse(labelsRaw) : [];
+    const data = dataRaw ? JSON.parse(dataRaw) : [];
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Média Diária de 5S (%)',
+                data: data,
+                borderColor: '#ea580c',
+                backgroundColor: 'rgba(234, 88, 12, 0.1)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#ea580c',
+                pointRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, max: 100, grid: { borderDash: [5, 5] } },
+                x: { grid: { display: false } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+</script>
+{% endblock %}

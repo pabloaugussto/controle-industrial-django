@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    
+    <div class="mb-8 text-center">
+        <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">Registro de Movimentação</h2>
+        <p class="text-gray-500 mt-2">Protocolo de Entrada e Saída de Materiais</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+        <div class="p-1 bg-gray-100 flex gap-1">
+            <div class="flex-1 text-center py-2 text-sm font-bold text-blue-700 bg-white rounded-t-lg shadow-sm">
+                NOVA TRANSAÇÃO
+            </div>
+        </div>
+
+        <div class="p-8">
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+                        <p class="text-red-700 font-bold">Erro de Protocolo:</p>
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="space-y-6">
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Selecione o Item</label>
+                        {{ form.produto }}
+                        <p class="text-xs text-gray-400 mt-1">Certifique-se de selecionar o código correto.</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Operação</label>
+                            {{ form.tipo }}
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Quantidade</label>
+                            {{ form.quantidade }}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Origem / Destino (Documento)</label>
+                        {{ form.observacao }}
+                        <p class="text-xs text-gray-400 mt-1">Informe Nº da Nota Fiscal (Entrada) ou Setor Solicitante (Saída).</p>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" class="w-full industrial-gradient text-white font-bold py-4 rounded-lg shadow-lg hover:opacity-95 transition transform hover:-translate-y-0.5 flex justify-center items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                            CONFIRMAR MOVIMENTAÇÃO
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        
+        <div class="bg-gray-50 px-8 py-4 border-t border-gray-100 flex justify-between items-center">
+            <span class="text-xs text-gray-400">ID da Sessão: {{ request.session.session_key|truncatechars:10 }}</span>
+            <a href="{% url 'estoque:lista_produtos' %}" class="text-sm text-gray-600 hover:text-gray-900 font-medium">Cancelar e Voltar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
