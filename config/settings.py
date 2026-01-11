@@ -127,3 +127,8 @@ STATIC_URL = 'static/'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# --- Configurações de Login e Redirecionamento ---
+LOGIN_URL = 'login'           # Diz pro Django: "A tela de login fica em /login/, não em /accounts/..."
+LOGIN_REDIRECT_URL = 'core:index' # Depois de logar, manda pro Dashboard (Home)
+LOGOUT_REDIRECT_URL = 'login' # Depois de sair, volta pra tela de login

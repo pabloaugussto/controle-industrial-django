@@ -1,15 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-{% url 'estoque:lista_produtos' as url_estoque %}
-{% url 'estoque:movimentar' as url_movimentar %}
-{% url 'qualidade:relatorios' as url_qualidade %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
     <aside class="lg:col-span-1 space-y-6">
-        
         <section class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
             <div class="h-20 industrial-gradient"></div>
             <div class="px-6 pb-6 relative">
@@ -18,18 +14,21 @@
                         {{ user.username|make_list|first|upper }}
                     </div>
                 </div>
+
                 <div class="mt-12 text-center">
-                    <h2 class="text-xl font-bold text-gray-800">{{ user.first_name }} {{ user.last_name }}</h2>
+                    <h2 class="text-xl font-bold text-gray-800">{{ user.first_name|default:user.username }}</h2>
                     <p class="text-gray-500 text-sm">@{{ user.username }}</p>
+
                     <div class="mt-4">
                         <span class="px-3 py-1 bg-orange-100 text-orange-800 text-xs font-semibold rounded-full">
-                            {{ user.perfil.cargo }}
+                            {{ user.perfil.cargo|default:"Administrador" }}
                         </span>
                     </div>
+
                     <div class="mt-6 border-t pt-4 grid grid-cols-2 gap-4">
                         <div class="text-center">
                             <span class="block text-gray-400 text-xs uppercase">Matrícula</span>
-                            <span class="font-mono font-bold text-gray-700">{{ user.perfil.matricula }}</span>
+                            <span class="font-mono font-bold text-gray-700">{{ user.perfil.matricula|default:"--" }}</span>
                         </div>
                         <div class="text-center">
                             <span class="block text-gray-400 text-xs uppercase">Status</span>
@@ -41,41 +40,155 @@
         </section>
 
         <section class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-            <h3 class="font-bold text-gray-800 mb-4">Suas Atividades</h3>
+            <h3 class="font-bold text-gray-800 mb-4">Atividades Recentes</h3>
             {% if historico %}
                 <ul class="space-y-4">
                     {% for mov in historico %}
-                    <li class="text-sm text-gray-700">
+                    <li class="text-sm text-gray-700 border-b border-gray-50 last:border-0 pb-2 last:pb-0">
                         <span class="text-xs text-gray-400 block">{{ mov.data|date:"d/m H:i" }}</span>
-                        {{ mov.produto.nome }} <span class="font-bold">({{ mov.quantidade }})</span>
+                        <div class="flex justify-between">
+                            <span>{{ mov.produto.nome }}</span>
+                            <span class="font-bold">({{ mov.quantidade }})</span>
+                        </div>
                     </li>
                     {% endfor %}
                 </ul>
                 <div class="mt-4 text-center">
-                    <a href="{% url 'estoque:historico' %}" class="text-xs text-blue-600 hover:underline">Ver histórico completo</a>
+                    <a href="/estoque/historico/" class="text-xs text-blue-600 hover:underline">Ver tudo</a>
                 </div>
             {% else %}
-                <p class="text-sm text-gray-500 text-center">Nenhuma atividade recente.</p>
+                <p class="text-sm text-gray-400 text-center py-2">Nenhuma atividade registrada.</p>
             {% endif %}
         </section>
     </aside>
 
-    <main class="lg:col-span-3">
-        <header class="mb-8">
-            <h1 class="text-3xl font-extrabold text-gray-800">Painel de Controle</h1>
-            <p class="text-gray-500">Selecione um módulo para começar a trabalhar.</p>
+    <main class="lg:col-span-3 space-y-6">
+        
+        <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+            <div>
+                <h1 class="text-3xl font-extrabold text-gray-800 tracking-tight">Painel de Controle</h1>
+                <p class="text-gray-500">Indicadores de Qualidade e Conformidade da semana.</p>
+            </div>
+            
+            <a href="{% url 'qualidade:nova_auditoria' %}" class="industrial-gradient text-white px-6 py-3 rounded-lg font-bold shadow-md hover:shadow-lg transition transform hover:-translate-y-1 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                Nova Auditoria
+            </a>
         </header>
 
-        <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            {% include "components/dashboard_card.html" with url=url_estoque border_color="border-orange-600" icon_bg="bg-orange-100" icon_hover_bg="group-hover:bg-orange-600" icon_color="text-orange-600" icon_name="estoque" title="Consultar Estoque" description="Saldo atual, localização e gestão de itens." %}
+        <section class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-4 -mt-4 transition group-hover:bg-blue-100"></div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider relative z-10">Média Geral (Semana)</p>
+                <div class="flex items-baseline gap-2 mt-2 relative z-10">
+                    <span class="text-4xl font-extrabold {% if media_semanal >= 80 %}text-green-600{% elif media_semanal >= 50 %}text-yellow-500{% else %}text-red-500{% endif %}">
+                        {{ media_semanal|floatformat:1 }}%
+                    </span>
+                </div>
+            </div>
 
-            {% include "components/dashboard_card.html" with url=url_movimentar border_color="border-blue-600" icon_bg="bg-blue-100" icon_hover_bg="group-hover:bg-blue-600" icon_color="text-blue-600" icon_name="movimentacao" title="Registrar Saída/Entrada" description="Baixas por centro de custo e notas fiscais." %}
+            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-green-50 rounded-bl-full -mr-4 -mt-4 transition group-hover:bg-green-100"></div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider relative z-10">Melhor Setor 🏆</p>
+                <div class="mt-2 relative z-10">
+                    {% if melhor_setor %}
+                        <span class="text-2xl font-bold text-gray-800 block truncate">{{ melhor_setor.nome }}</span>
+                        <p class="text-sm text-green-600 font-bold">{{ melhor_setor.media|floatformat:1 }}%</p>
+                    {% else %}
+                        <span class="text-gray-400 text-lg">--</span>
+                    {% endif %}
+                </div>
+            </div>
 
-            {% include "components/dashboard_card.html" with url=url_qualidade border_color="border-green-600" icon_bg="bg-green-100" icon_hover_bg="group-hover:bg-green-600" icon_color="text-green-600" icon_name="qualidade" title="Auditoria 5S" description="Checklists de conformidade e qualidade." %}
-        
+            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 transition group-hover:bg-red-100"></div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider relative z-10">Atenção ⚠️</p>
+                <div class="mt-2 relative z-10">
+                    {% if ranking %}
+                        {% with pior=ranking|last %}
+                            <span class="text-2xl font-bold text-gray-800 block truncate">{{ pior.nome }}</span>
+                            <p class="text-sm text-red-500 font-bold">{{ pior.media|floatformat:1 }}%</p>
+                        {% endwith %}
+                    {% else %}
+                        <span class="text-gray-400 text-lg">--</span>
+                    {% endif %}
+                </div>
+            </div>
         </section>
+
+        <section class="grid lg:grid-cols-3 gap-6">
+            <div class="col-span-2 bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                <h3 class="font-bold text-gray-800 mb-6">Evolução Diária</h3>
+                <div class="relative h-72 w-full">
+                    <canvas id="graficoSemanalMain"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                <h3 class="font-bold text-gray-800 mb-6">Ranking Geral</h3>
+                <div class="space-y-4">
+                    {% for item in ranking %}
+                    <div>
+                        <div class="flex justify-between items-center text-sm mb-1">
+                            <span class="font-medium text-gray-700 flex items-center gap-2">
+                                <span class="w-5 h-5 rounded-full bg-gray-100 text-xs flex items-center justify-center font-bold text-gray-500">{{ forloop.counter }}</span>
+                                {{ item.nome }}
+                            </span>
+                            <span class="font-bold text-gray-900">{{ item.media|floatformat:0 }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-2">
+                            <div class="h-2 rounded-full {% if item.media >= 80 %}bg-green-500{% elif item.media >= 50 %}bg-yellow-400{% else %}bg-red-500{% endif %}" 
+                                 style="width: {{ item.media|stringformat:'f' }}%"></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-sm text-gray-400 text-center">Sem dados esta semana.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
     </main>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('graficoSemanalMain').getContext('2d');
+        const labels = {{ chart_labels|safe }};
+        const data = {{ chart_data|safe }};
+
+        // Gradiente bonito
+        let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(13, 148, 136, 0.2)'); // Teal/Verde
+        gradient.addColorStop(1, 'rgba(13, 148, 136, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Média (%)',
+                    data: data,
+                    borderColor: '#0d9488',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#0d9488',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, max: 100, grid: { borderDash: [5, 5] } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}

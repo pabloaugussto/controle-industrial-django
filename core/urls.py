@@ -1,12 +1,10 @@
-from django.urls import path, include
-from django.contrib.auth import views as auth_views
+from django.urls import path
 from . import views
 
+# AQUI ESTÁ A SOLUÇÃO: Definimos o "sobrenome" do app
+app_name = 'core' 
+
 urlpatterns = [
-    path('', views.index, name='dashboard'),
-    
-    # Login e Logout nativos do Django
-    path('login/', auth_views.LoginView.as_view(template_name='core/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('5s/', include('qualidade.urls')),
+    # Agora essa rota se chama oficialmente 'core:index'
+    path('', views.index, name='index'),
 ]
