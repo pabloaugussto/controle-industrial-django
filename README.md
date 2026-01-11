@@ -66,7 +66,7 @@ Um sistema web moderno e responsivo desenvolvido para **controle de qualidade in
 
 1. **Clone o repositório:**
    ```bash
-   git clone [https://github.com/seu-usuario/controle-industrial-django.git](https://github.com/seu-usuario/controle-industrial-django.git)
+   git clone (https://github.com/pabloaugussto/controle-industrial-django.git)
    cd controle-industrial-django
 
 # Windows
