@@ -1,22 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto">
+<div class="max-w-3xl mx-auto pb-20">
     
-    <div class="mb-8 text-center">
-        <h2 class="text-3xl font-extrabold text-gray-800">Nova Auditoria 5S</h2>
-        <p class="text-gray-500">Preencha o checklist abaixo avaliando cada senso.</p>
+    <div class="text-center mb-8 animate-fade-in-down">
+        <h2 class="text-3xl font-extrabold text-gray-800 tracking-tight">Nova Auditoria <span class="text-teal-600">5S</span></h2>
+        <p class="text-gray-500 mt-2">Avalie cada senso com atenção aos detalhes.</p>
     </div>
 
-    <form method="POST" enctype="multipart/form-data" class="space-y-8">
+    <form method="POST" enctype="multipart/form-data" class="space-y-10">
         {% csrf_token %}
 
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-            <h3 class="font-bold text-gray-700 mb-4 border-b pb-2">Dados da Auditoria</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {% for field in form %}
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">{{ field.label }}</label>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">{{ field.label }}</label>
                         {{ field }}
                     </div>
                 {% endfor %}
@@ -26,10 +25,10 @@
         {% regroup questoes by get_senso_display as lista_sensos %}
 
         {% for senso in lista_sensos %}
-        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+        <div class="relative group">
             
-            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+            <div class="sticky top-0 z-20 bg-gray-50/95 backdrop-blur-sm border-y border-gray-200 py-3 px-4 flex items-center gap-3 shadow-sm transition-all">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-teal-700 text-white flex items-center justify-center font-bold text-lg shadow-md">
                     {{ forloop.counter }}S
                 </div>
                 <h3 class="text-lg font-bold text-gray-800 uppercase tracking-wide">
@@ -37,39 +36,40 @@
                 </h3>
             </div>
 
-            <div class="p-6 space-y-6">
+            <div class="bg-white rounded-b-2xl shadow-sm border-x border-b border-gray-100 p-2 sm:p-6 space-y-2">
                 {% for questao in senso.list %}
-                <div class="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
+                <div class="p-4 rounded-xl border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-colors duration-200">
                     
-                    <p class="text-gray-800 font-medium text-lg mb-3">{{ questao.texto }}</p>
+                    <p class="text-gray-800 font-medium text-base sm:text-lg mb-4 leading-relaxed">{{ questao.texto }}</p>
                     
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="flex flex-col sm:flex-row gap-4">
                         
-                        <div class="flex items-center gap-2">
+                        <div class="flex flex-1 gap-2 h-12">
                             <input type="hidden" name="status_{{ questao.id }}" id="input_status_{{ questao.id }}" value="true">
                             
                             <button type="button" 
                                 onclick="setConformidade('{{ questao.id }}', false)"
                                 id="btn_nok_{{ questao.id }}"
-                                class="px-4 py-2 rounded-lg font-bold text-sm border transition-all text-gray-400 border-gray-300 hover:bg-red-50">
-                                NOK ❌
+                                class="flex-1 rounded-lg border-2 border-gray-200 text-gray-400 font-bold hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                NOK
                             </button>
 
                             <button type="button" 
                                 onclick="setConformidade('{{ questao.id }}', true)"
                                 id="btn_ok_{{ questao.id }}"
-                                class="px-4 py-2 rounded-lg font-bold text-sm border transition-all bg-green-500 text-white border-green-500 shadow-md">
-                                OK ✅
+                                class="flex-1 rounded-lg border-2 border-teal-500 bg-teal-500 text-white font-bold shadow-md transform scale-[1.02] flex items-center justify-center gap-2 transition-all">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                OK
                             </button>
                         </div>
 
-                        <div class="relative">
-                            <label for="foto_{{ questao.id }}" class="cursor-pointer flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 transition-colors font-medium hover:bg-blue-50 px-3 py-1 rounded-lg">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                <span>Adicionar Foto</span>
+                        <div class="relative sm:w-1/3">
+                            <label for="foto_{{ questao.id }}" class="cursor-pointer flex items-center justify-center gap-2 h-12 w-full text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors font-medium border border-transparent hover:border-gray-300">
+                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <span class="truncate" id="label_foto_{{ questao.id }}">Foto (Opcional)</span>
                             </label>
-                            <input type="file" name="foto_{{ questao.id }}" id="foto_{{ questao.id }}" class="hidden" onchange="previewFoto(this, 'preview_{{ questao.id }}')">
-                            <span id="preview_{{ questao.id }}" class="text-xs text-gray-500 ml-2 block sm:inline"></span>
+                            <input type="file" name="foto_{{ questao.id }}" id="foto_{{ questao.id }}" class="hidden" onchange="previewFoto(this, '{{ questao.id }}')">
                         </div>
 
                     </div>
@@ -79,10 +79,10 @@
         </div>
         {% endfor %}
 
-        <div class="flex justify-end pt-4 pb-12">
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg transform transition hover:-translate-y-1 text-lg flex items-center gap-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                Finalizar Auditoria
+        <div class="fixed bottom-6 left-0 right-0 px-4 flex justify-center z-30 pointer-events-none">
+            <button type="submit" class="pointer-events-auto bg-gray-900 hover:bg-black text-white font-bold py-4 px-10 rounded-full shadow-2xl transform transition hover:-translate-y-1 hover:scale-105 flex items-center gap-3">
+                <span>Finalizar Auditoria</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </button>
         </div>
 
@@ -97,20 +97,28 @@ function setConformidade(id, isOk) {
 
     input.value = isOk ? 'true' : 'false';
 
+    // Classes base
+    const baseClass = "flex-1 rounded-lg border-2 font-bold flex items-center justify-center gap-2 transition-all duration-200";
+    
     if (isOk) {
-        btnOk.className = "px-4 py-2 rounded-lg font-bold text-sm border transition-all bg-green-500 text-white border-green-500 shadow-md transform scale-105";
-        btnNok.className = "px-4 py-2 rounded-lg font-bold text-sm border transition-all text-gray-400 border-gray-300 hover:bg-red-50";
+        // Estado OK: Ativo
+        btnOk.className = baseClass + " border-teal-500 bg-teal-500 text-white shadow-md transform scale-[1.02]";
+        // Estado NOK: Inativo
+        btnNok.className = baseClass + " border-gray-200 text-gray-400 hover:bg-red-50 hover:text-red-500 hover:border-red-200";
     } else {
-        btnOk.className = "px-4 py-2 rounded-lg font-bold text-sm border transition-all text-gray-400 border-gray-300 hover:bg-green-50";
-        btnNok.className = "px-4 py-2 rounded-lg font-bold text-sm border transition-all bg-red-500 text-white border-red-500 shadow-md transform scale-105";
+        // Estado OK: Inativo
+        btnOk.className = baseClass + " border-gray-200 text-gray-400 hover:bg-teal-50 hover:text-teal-600 hover:border-teal-200";
+        // Estado NOK: Ativo
+        btnNok.className = baseClass + " border-red-500 bg-red-500 text-white shadow-md transform scale-[1.02]";
     }
 }
 
-function previewFoto(input, previewId) {
-    const span = document.getElementById(previewId);
+function previewFoto(input, id) {
+    const label = document.getElementById(`label_foto_${id}`);
     if (input.files && input.files[0]) {
-        span.innerText = "📸 " + input.files[0].name;
-        span.className = "text-xs text-teal-600 font-bold ml-2 bg-teal-50 px-2 py-1 rounded border border-teal-200";
+        label.innerText = "📸 " + input.files[0].name;
+        label.parentElement.classList.add('bg-blue-50', 'text-blue-700', 'border-blue-200');
+        label.parentElement.classList.remove('bg-gray-100', 'text-gray-600');
     }
 }
 </script>
