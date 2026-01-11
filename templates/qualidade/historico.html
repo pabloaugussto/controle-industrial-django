@@ -1,0 +1,110 @@
+{% extends 'base.html' %} {% block content %}
+<div class="max-w-5xl mx-auto">
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-3xl font-extrabold text-gray-800">
+      Histórico de Auditorias
+    </h2>
+    <a
+      href="{% url 'qualidade:nova_auditoria' %}"
+      class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-900 transition"
+    >
+      + Nova Auditoria
+    </a>
+  </div>
+
+  <div
+    class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+  >
+    <table class="w-full text-left">
+      <thead class="bg-gray-50 border-b border-gray-200">
+        <tr>
+          <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">
+            Data
+          </th>
+          <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">
+            Setor
+          </th>
+          <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">
+            Nota
+          </th>
+          <th
+            class="px-6 py-4 text-xs font-bold text-gray-500 uppercase text-right"
+          >
+            Ações
+          </th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for aud in auditorias %}
+        <tr class="hover:bg-gray-50 transition">
+          <td class="px-6 py-4 text-sm text-gray-600">
+            {{ aud.data|date:"d/m/Y H:i" }}
+          </td>
+          <td class="px-6 py-4 text-sm font-bold text-gray-800">
+            {{ aud.get_setor_display }}
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="px-2 py-1 rounded text-xs font-bold {% if aud.nota_final >= 80 %}bg-green-100 text-green-800 {% elif aud.nota_final >= 50 %}bg-yellow-100 text-yellow-800 {% else %}bg-red-100 text-red-800{% endif %}"
+            >
+              {{ aud.nota_final|floatformat:1 }}%
+            </span>
+          </td>
+          <td class="px-6 py-4 text-right">
+            <div class="flex items-center justify-end gap-3">
+              <a
+                href="{% url 'qualidade:gerar_pdf' aud.id %}"
+                target="_blank"
+                class="text-teal-600 hover:text-teal-800 font-bold text-sm flex items-center gap-1 bg-teal-50 px-2 py-1 rounded hover:bg-teal-100 transition"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                PDF
+              </a>
+
+              <a
+                href="{% url 'qualidade:deletar_auditoria' aud.id %}"
+                class="text-red-500 hover:text-red-700 font-bold text-sm flex items-center gap-1 bg-red-50 px-2 py-1 rounded hover:bg-red-100 transition"
+                onclick="return confirm('Tem certeza que deseja excluir esta auditoria permanentemente?');"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+                Excluir
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+            Nenhuma auditoria realizada ainda.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

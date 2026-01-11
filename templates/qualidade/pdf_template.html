@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin: 2cm;
+            @frame footer_frame {
+                -pdf-frame-content: footerContent;
+                bottom: 1cm;
+                margin-left: 2cm;
+                margin-right: 2cm;
+                height: 1cm;
+            }
+        }
+        body { font-family: Helvetica, sans-serif; color: #333; }
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #0f766e; padding-bottom: 10px; }
+        h1 { color: #0f766e; font-size: 24px; margin: 0; }
+        h2 { font-size: 16px; color: #555; margin-top: 5px; }
+        
+        .info-box { background-color: #f0fdf4; padding: 10px; border: 1px solid #bbf7d0; margin-bottom: 20px; }
+        .info-row { margin-bottom: 5px; font-size: 12px; }
+        .label { font-weight: bold; color: #115e59; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { background-color: #0f766e; color: white; padding: 8px; text-align: left; font-size: 12px; }
+        td { border-bottom: 1px solid #ddd; padding: 8px; font-size: 11px; }
+        .status-ok { color: green; font-weight: bold; }
+        .status-nok { color: red; font-weight: bold; }
+        
+        #footerContent { text-align: right; font-size: 9px; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Relatório de Auditoria 5S</h1>
+        <h2>Controle de Qualidade Industrial</h2>
+    </div>
+
+    <div class="info-box">
+        <div class="info-row"><span class="label">Auditor:</span> {{ auditoria.usuario.get_full_name|default:auditoria.usuario.username }}</div>
+        <div class="info-row"><span class="label">Setor:</span> {{ auditoria.get_setor_display }}</div>
+        <div class="info-row"><span class="label">Data:</span> {{ auditoria.data|date:"d/m/Y H:i" }}</div>
+        <div class="info-row"><span class="label">Nota Final:</span> {{ auditoria.nota_final|floatformat:1 }}%</div>
+    </div>
+
+    <h3>Detalhamento da Avaliação</h3>
+    
+    <table>
+        <thead>
+            <tr>
+                <th width="60%">Item Avaliado</th>
+                <th width="20%">Senso</th>
+                <th width="20%">Resultado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resposta in auditoria.resposta_set.all %}
+            <tr>
+                <td>{{ resposta.questao.texto }}</td>
+                <td>{{ resposta.questao.get_senso_display }}</td>
+                <td>
+                    {% if resposta.conforme %}
+                        <span class="status-ok">CONFORME</span>
+                    {% else %}
+                        <span class="status-nok">NÃO CONFORME</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="footerContent">
+        Gerado automaticamente pelo Sistema Almoxarifado 2.0 | Página <pdf:pagenumber>
+    </div>
+</body>
+</html>

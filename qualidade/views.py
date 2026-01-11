@@ -1,3 +1,9 @@
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.staticfiles import finders
+import os
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -51,7 +57,7 @@ def nova_auditoria(request):
                 # 3. Calcula a nota final e exibe mensagem
                 nota = auditoria.calcular_nota()
                 messages.success(request, f"Auditoria finalizada! Nota do setor: {nota:.1f}%")
-                return redirect('qualidade:relatorios') # Ajustei para ir para relatórios, mas pode manter dashboard se preferir
+                return redirect('core:index') # Ajustei para ir para relatórios, mas pode manter dashboard se preferir
 
             except Exception as e:
                 messages.error(request, f"Erro ao salvar: {e}")
@@ -63,6 +69,47 @@ def nova_auditoria(request):
         'questoes': questoes
     }
     return render(request, 'qualidade/nova_auditoria.html', context)
+
+@login_required
+def historico_auditorias(request):
+    # Lista as auditorias da mais recente para a mais antiga
+    auditorias = Auditoria.objects.filter(usuario=request.user).order_by('-data')
+    return render(request, 'qualidade/historico.html', {'auditorias': auditorias})
+
+@login_required
+def gerar_pdf(request, pk):
+    # Busca a auditoria pelo ID (pk)
+    auditoria = Auditoria.objects.get(id=pk)
+    
+    # Prepara o contexto (dados que vão pro PDF)
+    context = {'auditoria': auditoria}
+    
+    # Carrega o template HTML do PDF
+    template_path = 'qualidade/pdf_template.html'
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # Cria a resposta do Django como PDF
+    response = HttpResponse(content_type='application/pdf')
+    # Se quiser que baixe direto, mude 'inline' para 'attachment'
+    response['Content-Disposition'] = f'inline; filename="Auditoria_{auditoria.id}.pdf"'
+
+    # Gera o PDF
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse('Tivemos erros ao gerar o PDF <pre>' + html + '</pre>')
+    return response
+
+@login_required
+def deletar_auditoria(request, pk):
+    # Busca a auditoria apenas se ela pertencer ao usuário logado (segurança)
+    auditoria = get_object_or_404(Auditoria, pk=pk, usuario=request.user)
+    
+    auditoria.delete()
+    messages.success(request, "Auditoria excluída com sucesso!")
+    
+    return redirect('qualidade:historico')
 
 
 
