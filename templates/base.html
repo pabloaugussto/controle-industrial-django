@@ -56,9 +56,7 @@
       }
     </style>
   </head>
-  <body
-    class="bg-gray-50 min-h-screen flex flex-col font-sans text-slate-800 antialiased selection:bg-teal-500 selection:text-white"
-  >
+  <body <body class="bg-gray-50 min-h-screen flex flex-col font-sans ... pb-20">
     <nav class="glass-nav fixed w-full z-50 transition-all duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
@@ -299,5 +297,28 @@
         </div>
       </div>
     </footer>
+    <div class="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 flex items-center justify-around shadow-[0_-5px_10px_rgba(0,0,0,0.02)]">
+        
+        <a href="{% url 'core:index' %}" class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-teal-600 active:text-teal-700 transition group">
+            <svg class="w-6 h-6 mb-1 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span class="text-[10px] font-bold">Início</span>
+        </a>
+
+        <div class="relative w-full flex justify-center">
+            <a href="{% url 'qualidade:nova_auditoria' %}" class="absolute -top-6 w-14 h-14 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-teal-500/40 border-4 border-gray-50 transform active:scale-95 transition-all">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            </a>
+            <span class="mt-8 text-[10px] font-bold text-teal-600">Auditar</span>
+        </div>
+
+        <a href="{% url 'qualidade:historico' %}" class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-teal-600 active:text-teal-700 transition group">
+            <svg class="w-6 h-6 mb-1 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            <span class="text-[10px] font-bold">Histórico</span>
+        </a>
+
+    </div>
+</body>
+
+
   </body>
 </html>
