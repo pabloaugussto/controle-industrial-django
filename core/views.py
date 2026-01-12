@@ -1,70 +1,73 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.db.models import Avg, Count
-from django.db.models.functions import TruncDate
+from django.db.models import Avg
 from django.utils import timezone
 from datetime import timedelta
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-
-# Importação dos Modelos
-from estoque.models import Movimentacao
 from qualidade.models import Auditoria
 
 @login_required
 def index(request):
-    # 1. SIDEBAR: Histórico Recente
-    historico_recente = Movimentacao.objects.filter(
-        usuario=request.user
-    ).select_related('produto').order_by('-data')[:5]
-
-    # --- LÓGICA DO DASHBOARD DE QUALIDADE ---
-    
-    # 2. Definir o período (Semana Atual)
+    # --- 1. CONFIGURAÇÃO DE DATAS ---
     hoje = timezone.now()
-    inicio_semana = hoje - timedelta(days=hoje.weekday()) # Pega a segunda-feira
     
-    # CORREÇÃO AQUI: Mudamos de 'data_auditoria' para 'data'
+    # Define o início desta semana (Segunda-feira) para os KPIs
+    inicio_semana = hoje - timedelta(days=hoje.weekday())
+    inicio_semana = inicio_semana.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    # --- 2. CÁLCULO DOS KPIS (MÉDIAS DA SEMANA) ---
     auditorias_semana = Auditoria.objects.filter(data__gte=inicio_semana)
 
-    # 3. KPI: Média Geral da Semana
-    media_semanal = auditorias_semana.aggregate(m=Avg('nota_final'))['m'] or 0
+    # Média Geral da Semana
+    media_semanal = auditorias_semana.aggregate(Avg('nota_final'))['nota_final__avg'] or 0
 
-    # 4. KPI & Ranking: Agrupar por Setor
-    ranking_bruto = auditorias_semana.values('setor').annotate(
-        media=Avg('nota_final'),
-        total_auditorias=Count('id')
-    ).order_by('-media')
-
+    # Ranking por Setor
+    stats_setores = auditorias_semana.values('setor').annotate(media=Avg('nota_final')).order_by('-media')
+    
     ranking = []
-    for item in ranking_bruto:
-        # Tenta pegar o nome legível do setor (ex: 'Almoxarifado' em vez de 'ALMOXARIFADO')
-        nome_setor = dict(Auditoria.SETOR_CHOICES).get(item['setor'], item['setor'])
+    for item in stats_setores:
+        # Pega o nome legível do setor (Ex: 'Almoxarifado' em vez de 'almox')
+        # Usa _meta.get_field para garantir que funcione independente do nome da lista
+        nome_setor = dict(Auditoria._meta.get_field('setor').choices).get(item['setor'], item['setor'])
         ranking.append({'nome': nome_setor, 'media': item['media']})
 
-    # 5. Melhores e Piores
+    # Define melhor setor (primeiro do ranking)
     melhor_setor = ranking[0] if ranking else None
-    pior_setor = ranking[-1] if ranking else None
-
-    # 6. Dados para o Gráfico (Evolução Diária)
-    # CORREÇÃO AQUI TAMBÉM: Usando 'data' no TruncDate
-    dados_diarios = auditorias_semana.annotate(
-        dia=TruncDate('data')
-    ).values('dia').annotate(
-        media_dia=Avg('nota_final')
-    ).order_by('dia')
-
-    chart_labels = [d['dia'].strftime('%d/%m') for d in dados_diarios]
-    chart_data = [round(d['media_dia'], 1) for d in dados_diarios]
-
-    # --- CONTEXTO FINAL ---
-    context = {
-        'historico': historico_recente,
-        'media_semanal': media_semanal,
-        'melhor_setor': melhor_setor,
-        'ranking': ranking,
-        'chart_labels': json.dumps(chart_labels, cls=DjangoJSONEncoder),
-        'chart_data': json.dumps(chart_data, cls=DjangoJSONEncoder),
-    }
     
+    # --- 3. DADOS PARA O GRÁFICO (Últimos 7 dias) ---
+    chart_labels = []
+    chart_data = []
+
+    # Loop pelos últimos 7 dias (incluindo hoje)
+    for i in range(6, -1, -1):
+        dia = hoje - timedelta(days=i)
+        
+        # Define o intervalo do dia (00:00 até 23:59)
+        dia_inicio = dia.replace(hour=0, minute=0, second=0)
+        dia_fim = dia.replace(hour=23, minute=59, second=59)
+
+        # Filtra auditorias daquele dia específico
+        auditorias_dia = Auditoria.objects.filter(data__range=(dia_inicio, dia_fim))
+        
+        # Calcula a média do dia
+        media_dia = auditorias_dia.aggregate(Avg('nota_final'))['nota_final__avg'] or 0
+        
+        # Adiciona na lista do gráfico
+        chart_labels.append(dia.strftime('%d/%m')) # Ex: 12/01
+        
+        # --- A CORREÇÃO MÁGICA ESTÁ AQUI ---
+        # Convertemos para float() para o JavaScript não travar com "Decimal()"
+        chart_data.append(float(round(media_dia, 1)))
+
+    # --- 4. HISTÓRICO RECENTE (SIDEBAR) ---
+    historico_recente = Auditoria.objects.all().order_by('-data')[:5]
+
+    context = {
+        'media_semanal': media_semanal,
+        'ranking': ranking,
+        'melhor_setor': melhor_setor,
+        'chart_labels': chart_labels,
+        'chart_data': chart_data,
+        'historico': historico_recente,
+    }
+
     return render(request, 'core/index.html', context)
