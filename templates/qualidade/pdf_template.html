@@ -44,7 +44,14 @@
         <div class="info-row"><span class="label">Nota Final:</span> {{ auditoria.nota_final|floatformat:1 }}%</div>
     </div>
 
-    <h3>Detalhamento da Avaliação</h3>
+    {% if auditoria.observacao %}
+    <div style="margin-top: 15px; margin-bottom: 20px; padding: 10px; background-color: #f0fdfa; border: 1px solid #ccfbf1; border-radius: 5px; font-size: 11px; color: #333; line-height: 1.4;">
+        <strong style="color: #0f766e; margin-right: 5px;">Observações do Auditor:</strong>
+        {{ auditoria.observacao|linebreaksbr }}
+    </div>
+    {% endif %}
+
+    <h3 style="margin-top: 20px;">Detalhamento da Avaliação</h3>
     
     <table>
         <thead>
