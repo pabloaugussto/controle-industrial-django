@@ -30,14 +30,6 @@ O sistema substitui pranchetas e planilhas manuais por uma aplicação **Mobile-
     * `xhtml2pdf`: Geração de relatórios PDF.
     * `chart.js` (ou similar): Renderização de gráficos.
 
-## 📸 Capturas de Tela
-
-*(Aqui você deve colocar os prints que me mandou: O Dashboard no PC, a Auditoria no Celular e o PDF gerado)*
-
-| Dashboard (PC) | Auditoria (Mobile) | Relatório PDF |
-| :---: | :---: | :---: |
-| ![Dashboard](caminho/para/print_dashboard.png) | ![Mobile](caminho/para/print_mobile.png) | ![PDF](caminho/para/print_pdf.png) |
-
 ## 🔧 Como Rodar o Projeto
 
 ### Pré-requisitos
