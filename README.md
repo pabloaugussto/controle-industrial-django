@@ -1,107 +1,96 @@
-# 🏭 Almoxarifado 2.0 - Sistema de Gestão da Qualidade & 5S
+# 🏭 Almoxarifado Industrial 2.0
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+> Sistema de Gestão de Auditorias 5S e Controle de Qualidade Industrial.
+
+![Status do Projeto](https://img.shields.io/badge/STATUS-FINALIZADO-green)
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![Django](https://img.shields.io/badge/Django-5.0-green)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-3.0-38bdf8)
-![Status](https://img.shields.io/badge/Status-Em_Desenvolvimento-orange)
 
-Um sistema web moderno e responsivo desenvolvido para **controle de qualidade industrial**, focado na metodologia **5S** (Seiri, Seiton, Seiso, Seiketsu, Shitsuke). O projeto oferece uma interface fluida para realização de auditorias em chão de fábrica e geração automática de relatórios.
+## 📄 Sobre o Projeto
 
----
+O **Almoxarifado 2.0** é uma solução web desenvolvida para modernizar e digitalizar o processo de auditoria de qualidade (Metodologia 5S) em ambientes industriais. 
 
-## 📸 Screenshots
+O sistema substitui pranchetas e planilhas manuais por uma aplicação **Mobile-First**, permitindo que auditores realizem inspeções diretamente pelo celular, gerem relatórios automáticos em PDF e acompanhem indicadores de desempenho (KPIs) em tempo real.
 
- **Dashboard Gerencial** 
+## 🚀 Funcionalidades Principais
 
-  <img width="1920" height="969" alt="image" src="https://github.com/user-attachments/assets/a4302b1a-4eb0-4c92-a59a-6d2a0177ef22" />
-  Auditoria <img width="1901" height="967" alt="image" src="https://github.com/user-attachments/assets/b810ae81-615a-40e5-b172-675fb4940b63" />|
- *KPIs em tempo real e gráficos de evolução.* | *Interface otimizada para tablets e celulares.* 
-
- **Histórico & PDF** 
-
- Relatórios <img width="1918" height="963" alt="image" src="https://github.com/user-attachments/assets/fa06407b-8fdd-412d-8dd5-06f4fed06f4e" />
-
- *Geração de relatórios oficiais e gestão de histórico.* 
-
----
-
-## ✨ Funcionalidades Principais
-
-### 📊 Painel de Controle (Dashboard)
-- **KPIs em Tempo Real:** Visualização imediata da Média Semanal, Melhor Setor e Pontos de Atenção.
-- **Gráficos Interativos:** Evolução diária das notas de qualidade (Chart.js).
-- **Ranking:** Classificação automática dos setores baseada na pontuação.
-
-### ✅ Auditoria 5S
-- **Checklist Inteligente:** Formulário dividido pelos 5 sensos.
-- **UX Otimizada:** Cabeçalhos fixos ("Sticky Headers") para facilitar a navegação em listas longas.
-- **Botões Touch-Friendly:** Interface desenhada para operadores usando tablets ou celulares.
-- **Evidências:** (Em breve) Suporte para upload de fotos das não-conformidades.
-
-### 📄 Relatórios & Documentação
-- **Histórico Completo:** Consulta de todas as auditorias realizadas.
-- **Geração de PDF:** Exportação de relatórios oficiais prontos para impressão/arquivamento.
-- **Gestão:** Possibilidade de excluir auditorias incorretas com confirmação de segurança.
-
----
+* **📱 Auditoria Mobile:** Interface otimizada para celulares, facilitando a inspeção no chão de fábrica (App Bar, Cards, Botões Grandes).
+* **📊 Dashboard Gerencial:** Visualização gráfica da evolução das notas, média semanal e ranking de setores.
+* **📄 Geração de Relatórios:** Criação automática de PDFs detalhados com notas, observações e status de conformidade.
+* **⚙️ Gerenciamento Dinâmico:** Painel administrativo para criar, editar e excluir perguntas do checklist sem mexer no código.
+* **🔐 Controle de Acesso:** Sistema de login com níveis de permissão (Colaborador vs. Admin/Staff).
+* **🗂️ Histórico Completo:** Registro imutável de todas as auditorias realizadas para fins de compliance.
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Backend:** Python + Django (MTV Architecture).
-- **Frontend:** HTML5, Tailwind CSS (via CDN para estilização rápida).
-- **Visualização de Dados:** Chart.js.
-- **Geração de PDF:** xhtml2pdf.
-- **Ícones:** Heroicons (SVG).
-- **Fonte:** Inter (Google Fonts) para alta legibilidade.
+* **Back-end:** Python, Django Framework.
+* **Front-end:** HTML5, CSS3, TailwindCSS (Design Responsivo).
+* **Banco de Dados:** SQLite (Desenvolvimento) / PostgreSQL (Compatível para Produção).
+* **Bibliotecas Chave:**
+    * `xhtml2pdf`: Geração de relatórios PDF.
+    * `chart.js` (ou similar): Renderização de gráficos.
 
----
+## 📸 Capturas de Tela
 
-## 🚀 Como Rodar o Projeto
+*(Aqui você deve colocar os prints que me mandou: O Dashboard no PC, a Auditoria no Celular e o PDF gerado)*
+
+| Dashboard (PC) | Auditoria (Mobile) | Relatório PDF |
+| :---: | :---: | :---: |
+| ![Dashboard](caminho/para/print_dashboard.png) | ![Mobile](caminho/para/print_mobile.png) | ![PDF](caminho/para/print_pdf.png) |
+
+## 🔧 Como Rodar o Projeto
 
 ### Pré-requisitos
-- Python 3.x instalado.
-- Git instalado.
+* Python 3.x instalado
+* Git instalado
 
 ### Passo a Passo
 
-1. **Clone o repositório:**
-   ```bash
-   git clone (https://github.com/pabloaugussto/controle-industrial-django.git)
-   cd controle-industrial-django
+1.  **Clone o repositório**
+    ```bash
+    git clone [https://github.com/seu-usuario/almoxarifado-2.0.git](https://github.com/seu-usuario/almoxarifado-2.0.git)
+    cd almoxarifado-2.0
+    ```
 
-# Windows
-python -m venv venv
-venv\Scripts\activate
+2.  **Crie e ative o ambiente virtual**
+    ```bash
+    # Windows
+    python -m venv venv
+    venv\Scripts\activate
 
-# Linux/Mac
-python3 -m venv venv
-source venv/bin/activate
+    # Linux/Mac
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
 
-2. Instale as dependências:
+3.  **Instale as dependências**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-Bash
+4.  **Configure o Banco de Dados**
+    ```bash
+    python manage.py migrate
+    python manage.py createsuperuser # Crie o admin do sistema
+    ```
 
-pip install -r requirements.txt
+5.  **Inicie o Servidor**
+    ```bash
+    python manage.py runserver
+    # Para acesso mobile na mesma rede: python manage.py runserver 0.0.0.0:8000
+    ```
 
-Prepare o Banco de Dados:
+6.  **Acesse:**
+    * Navegador: `http://127.0.0.1:8000`
 
-Bash
+## 🤝 Contribuição
 
-python manage.py migrate | Crie um Superusuário (Admin):
+Este projeto foi desenvolvido como parte do [Trabalho de Conclusão / Estágio] para a empresa [Nome da Empresa/Instituição].
 
-Bash
+## 👤 Autor
 
-python manage.py createsuperuser | Inicie o Servidor:
+**Seu Nome**
+* LinkedIn: [Seu Link]
+* GitHub: [Seu Link]
 
-Bash
-
-python manage.py runserver | Acesse: Abra o navegador em http://127.0.0.1:8000
-
-🤝 Contribuição
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests. 
-
-📝 Licença
-Este projeto está sob a licença MIT.
-
-Desenvolvido por Pablo Augusto.
-
+---
