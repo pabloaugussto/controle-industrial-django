@@ -5,7 +5,7 @@ from django.contrib.staticfiles import finders
 import os
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .models import Questao, Auditoria, Resposta
 from .forms import AuditoriaForm
@@ -14,6 +14,8 @@ from django.db.models import Avg
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Case, When, Value, IntegerField
+from .models import Questao
+from .forms import QuestaoForm
 
 @login_required
 def nova_auditoria(request):
@@ -110,6 +112,44 @@ def deletar_auditoria(request, pk):
     messages.success(request, "Auditoria excluída com sucesso!")
     
     return redirect('qualidade:historico')
+
+# Função para checar se é admin (opcional, mas recomendado)
+def is_admin(user):
+    return user.is_staff or user.is_superuser
+
+@login_required
+@user_passes_test(is_admin)
+def gerenciar_questoes(request):
+    questoes = Questao.objects.all().order_by('senso', 'id')
+    return render(request, 'qualidade/gerenciar_questoes.html', {'questoes': questoes})
+
+@login_required
+@user_passes_test(is_admin)
+def editar_questao(request, pk=None):
+    # Se tiver pk, é edição. Se não, é criação.
+    if pk:
+        questao = get_object_or_404(Questao, pk=pk)
+        titulo = "Editar Pergunta"
+    else:
+        questao = None
+        titulo = "Nova Pergunta"
+
+    if request.method == 'POST':
+        form = QuestaoForm(request.POST, instance=questao)
+        if form.is_valid():
+            form.save()
+            return redirect('qualidade:gerenciar_questoes')
+    else:
+        form = QuestaoForm(instance=questao)
+
+    return render(request, 'qualidade/form_questao.html', {'form': form, 'titulo': titulo})
+
+@login_required
+@user_passes_test(is_admin)
+def deletar_questao(request, pk):
+    questao = get_object_or_404(Questao, pk=pk)
+    questao.delete()
+    return redirect('qualidade:gerenciar_questoes')
 
 
 

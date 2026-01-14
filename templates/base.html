@@ -56,104 +56,50 @@
       }
     </style>
   </head>
-  <body <body class="bg-gray-50 min-h-screen flex flex-col font-sans ... pb-20">
+  
+  <body class="bg-gray-50 min-h-screen flex flex-col font-sans pb-20">
     <nav class="glass-nav fixed w-full z-50 transition-all duration-300">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-20">
-          <a
-            href="{% url 'core:index' %}"
-            class="flex items-center gap-3 group"
-          >
-            <div
-              class="p-2.5 bg-gradient-to-tr from-teal-500 to-emerald-400 rounded-xl shadow-lg shadow-teal-500/20 group-hover:shadow-teal-500/40 transition-all duration-300 transform group-hover:scale-105"
-            >
-              <svg
-                class="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
+          <a href="{% url 'core:index' %}" class="flex items-center gap-3 group">
+            <div class="p-2.5 bg-gradient-to-tr from-teal-500 to-emerald-400 rounded-xl shadow-lg shadow-teal-500/20 group-hover:shadow-teal-500/40 transition-all duration-300 transform group-hover:scale-105">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
             </div>
             <div class="flex flex-col">
-              <span
-                class="text-white font-bold text-lg tracking-tight leading-none"
-                >ALMOXARIFADO</span
-              >
-              <span
-                class="text-teal-400 text-[10px] font-bold tracking-widest uppercase mt-1"
-                >Industrial 2.0</span
-              >
+              <span class="text-white font-bold text-lg tracking-tight leading-none">ALMOXARIFADO</span>
+              <span class="text-teal-400 text-[10px] font-bold tracking-widest uppercase mt-1">Industrial 2.0</span>
             </div>
           </a>
 
-          <div
-            class="hidden md:flex items-center bg-white/5 rounded-full px-1.5 py-1.5 border border-white/5 backdrop-blur-sm"
-          >
-            <a
-              href="{% url 'core:index' %}"
-              class="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                />
+          <div class="hidden md:flex items-center bg-white/5 rounded-full px-1.5 py-1.5 border border-white/5 backdrop-blur-sm">
+            <a href="{% url 'core:index' %}" class="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
               </svg>
               Visão Geral
             </a>
 
-            <a
-              href="{% url 'qualidade:historico' %}"
-              class="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+            <a href="{% url 'qualidade:historico' %}" class="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               Histórico
             </a>
+            
+            {% if user.is_staff %}
+            <a href="{% url 'qualidade:gerenciar_questoes' %}" class="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Perguntas
+            </a>
+            {% endif %}
 
             <div class="w-px h-4 bg-white/10 mx-1"></div>
 
-            <a
-              href="{% url 'qualidade:nova_auditoria' %}"
-              class="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-teal-500 to-emerald-500 shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 hover:scale-105 transition-all duration-300"
-            >
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+            <a href="{% url 'qualidade:nova_auditoria' %}" class="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-teal-500 to-emerald-500 shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 hover:scale-105 transition-all duration-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               Nova Auditoria
             </a>
@@ -162,18 +108,10 @@
           <div class="flex items-center gap-5">
             {% if user.is_authenticated %}
             <div class="text-right hidden sm:block">
-              <p class="text-sm font-bold text-white leading-tight">
-                {{ user.username }}
-              </p>
+              <p class="text-sm font-bold text-white leading-tight">{{ user.username }}</p>
               <div class="flex items-center justify-end gap-1 mt-0.5">
-                <span
-                  class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"
-                ></span>
-                <p
-                  class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wide"
-                >
-                  Online
-                </p>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+                <p class="text-[10px] text-emerald-400 font-semibold uppercase tracking-wide">Online</p>
               </div>
             </div>
 
@@ -181,32 +119,14 @@
 
             <form action="{% url 'logout' %}" method="post">
               {% csrf_token %}
-              <button
-                type="submit"
-                class="p-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200 group"
-                title="Sair"
-              >
-                <svg
-                  class="w-5 h-5 transform group-hover:-translate-x-0.5 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
+              <button type="submit" class="p-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200 group" title="Sair">
+                <svg class="w-5 h-5 transform group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
               </button>
             </form>
             {% else %}
-            <a
-              href="{% url 'login' %}"
-              class="text-sm font-bold text-white hover:text-teal-400 transition-colors"
-              >Entrar</a
-            >
+            <a href="{% url 'login' %}" class="text-sm font-bold text-white hover:text-teal-400 transition-colors">Entrar</a>
             {% endif %}
           </div>
         </div>
@@ -215,77 +135,31 @@
 
     <div class="h-20"></div>
 
-    <main
-      class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-enter"
-    >
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-enter">
       {% if messages %}
       <div class="max-w-4xl mx-auto mb-8 space-y-3">
         {% for message in messages %}
-        <div
-          class="p-4 rounded-xl border backdrop-blur-sm shadow-sm flex items-center justify-between {% if message.tags == 'success' %} bg-emerald-50/80 border-emerald-200 text-emerald-800 {% elif message.tags == 'error' %} bg-red-50/80 border-red-200 text-red-800 {% else %} bg-blue-50/80 border-blue-200 text-blue-800 {% endif %}"
-        >
+        <div class="p-4 rounded-xl border backdrop-blur-sm shadow-sm flex items-center justify-between {% if message.tags == 'success' %} bg-emerald-50/80 border-emerald-200 text-emerald-800 {% elif message.tags == 'error' %} bg-red-50/80 border-red-200 text-red-800 {% else %} bg-blue-50/80 border-blue-200 text-blue-800 {% endif %}">
           <div class="flex items-center gap-3 font-medium">
             {% if message.tags == 'success' %}
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
             {% elif message.tags == 'error' %}
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             {% else %}
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             {% endif %} {{ message }}
           </div>
-
-          <button
-            onclick="this.parentElement.remove()"
-            class="opacity-50 hover:opacity-100 font-bold p-1"
-          >
-            ✕
-          </button>
+          <button onclick="this.parentElement.remove()" class="opacity-50 hover:opacity-100 font-bold p-1">✕</button>
         </div>
         {% endfor %}
       </div>
-      {% endif %} {% block content %} {% endblock %}
+      {% endif %} 
+      
+      {% block content %} {% endblock %}
     </main>
 
     <footer class="bg-white border-t border-gray-100 mt-auto">
-      <div
-        class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400"
-      >
+      <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
         <p>
           &copy; {% now "Y" %}
           <span class="font-bold text-gray-600">Almoxarifado 2.0</span>.
@@ -297,6 +171,7 @@
         </div>
       </div>
     </footer>
+
     <div class="md:hidden fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 flex items-center justify-around shadow-[0_-5px_10px_rgba(0,0,0,0.02)]">
         
         <a href="{% url 'core:index' %}" class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-teal-600 active:text-teal-700 transition group">
@@ -316,9 +191,16 @@
             <span class="text-[10px] font-bold">Histórico</span>
         </a>
 
+        {% if user.is_staff %}
+        <a href="{% url 'qualidade:gerenciar_questoes' %}" class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-teal-600 active:text-teal-700 transition group">
+            <svg class="w-6 h-6 mb-1 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span class="text-[10px] font-bold">Perguntas</span>
+        </a>
+        {% endif %}
+        
     </div>
-</body>
-
 
   </body>
 </html>
