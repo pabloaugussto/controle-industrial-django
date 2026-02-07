@@ -81,8 +81,8 @@ Este projeto foi desenvolvido como parte do [Trabalho de Conclusão / Estágio] 
 
 ## 👤 Autor
 
-**Seu Nome**
-* LinkedIn: [Seu Link]
-* GitHub: [Seu Link]
+**Pablo Augusto**
+* LinkedIn: https://www.linkedin.com/in/pablovelloso/
+
 
 ---
